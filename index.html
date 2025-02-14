@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Graph Animation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+        }
+        #chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 400px;
+            width: 600px;
+            position: relative;
+        }
+        .bar {
+            width: 100px;
+            margin: 0 10px;
+            text-align: center;
+            position: relative;
+            animation: growBar 2s ease-out;
+        }
+        .bar > div {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+        .green {
+            background-color: green;
+        }
+        .glow {
+            background-color: red;
+            box-shadow: 0 0 20px red;
+        }
+        @keyframes growBar {
+            from {
+                height: 0;
+            }
+            to {
+                height: var(--height);
+            }
+        }
+        .label {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart">
+        <!-- Bars will be dynamically generated here -->
+    </div>
+
+    <script>
+        // Data for the graph
+        const data = [
+            { name: "14701", value: 550000 },
+            { name: "14702", value: 350000 },
+            { name: "14703", value: 200000 },
+            { name: "Total", value: 1100000 },
+        ];
+
+        const chart = document.getElementById("chart");
+        const maxBudget = 500000;
+
+        data.forEach(item => {
+            const bar = document.createElement("div");
+            bar.className = "bar";
+            bar.style.setProperty("--height", `${(item.value / 1100000) * 100}%`);
+
+            const barContent = document.createElement("div");
+            barContent.style.height = `${(item.value / 1100000) * 100}%`;
+
+            // Add glow or green based on value
+            if (item.value > maxBudget) {
+                barContent.className = "glow";
+            } else {
+                barContent.className = "green";
+            }
+
+            const label = document.createElement("div");
+            label.className = "label";
+            label.textContent = `${item.name} (${item.value})`;
+
+            bar.appendChild(barContent);
+            bar.appendChild(label);
+            chart.appendChild(bar);
+        });
+    </script>
+</body>
+</html>
