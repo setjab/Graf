@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar Graph Animation</title>
+    <title>Våre Utgifter i Januar</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             background-color: black;
             color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+        h1 {
+            margin: 20px 0;
+            font-size: 36px;
+            color: yellow;
         }
         #chart {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            height: 400px;
-            width: 600px;
+            height: 500px;
+            width: 800px;
             position: relative;
+            margin-top: 20px;
         }
         .bar {
-            width: 100px;
-            margin: 0 10px;
+            width: 150px;
+            margin: 0 15px;
             text-align: center;
             position: relative;
-            animation: growBar 2s ease-out;
+            animation: growBar 2s ease-out forwards;
         }
         .bar > div {
             width: 100%;
@@ -52,10 +59,12 @@
         }
         .label {
             margin-top: 10px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
+    <h1>Våre Utgifter i Januar - Ansvar 35521</h1>
     <div id="chart">
         <!-- Bars will be dynamically generated here -->
     </div>
