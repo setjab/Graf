@@ -3,140 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashbord - Utgifter</title>
+    <title>Dashbord for Utgifter i Januar</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
             background-color: #1e1e2f;
             color: white;
+            font-family: Arial, sans-serif;
         }
+
         h1 {
             text-align: center;
-            font-size: 36px;
-            margin-top: 20px;
+            font-size: 108px; /* Gjort tre ganger større */
             color: #f8f32b;
+            text-shadow: 4px 4px 8px #000000;
+            margin: 20px 0 40px 0; /* Flytt tittelen ned fra toppen */
         }
+
         .dashboard-container {
             width: 90%;
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 60px auto; /* Senker hele dashbordet */
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 20px; /* Mellomrom mellom elementene */
         }
+
         .card {
-            background-color: #292942;
+            background-color: #292b44;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
-        .gauge-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
+
+        .chart-container {
+            position: relative;
+            height: 400px;
         }
-        canvas {
+
+        #barChart, #pieChart {
             width: 100%;
             height: 100%;
-        }
-        .info {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <h1>Våre Utgifter i Januar - Ansvar 35521</h1>
     <div class="dashboard-container">
-        <!-- Total Budget Card -->
+        <!-- Kort for total budsjett -->
         <div class="card">
-            <h3>Totalt Budsjett og Faktiske Utgifter</h3>
-            <div class="info">Total Budsjett: <strong>1,500,000 NOK</strong></div>
-            <div class="info">Faktiske Utgifter: <strong>1,100,000 NOK</strong></div>
+            <h2>Total Budsjett og Faktiske Utgifter</h2>
+            <p>Total Budsjett: 1.500.000 NOK</p>
+            <p>Faktiske Utgifter: 1.100.000 NOK</p>
         </div>
-
-        <!-- Gauge Indicator -->
+        <!-- Kort for kostnadsindikator -->
         <div class="card">
-            <h3>Kostnadsindikator</h3>
-            <div id="gauge" class="gauge-container"></div>
+            <h2>Kostnadsindikator</h2>
+            <div id="cost-indicator" style="height: 300px;"></div>
         </div>
-
-        <!-- Bar Chart -->
-        <div class="card">
-            <h3>Fordeling av Ansvar</h3>
+        <!-- Søylegraf -->
+        <div class="card chart-container">
+            <h2>Fordeling av Ansvar</h2>
             <canvas id="barChart"></canvas>
         </div>
-
-        <!-- Pie Chart -->
-        <div class="card">
-            <h3>Prosentandel Av Budsjett</h3>
+        <!-- Kakediagram -->
+        <div class="card chart-container">
+            <h2>Prosentandel Av Budsjett</h2>
             <canvas id="pieChart"></canvas>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Bar Chart
+        // Søylegraf
         const barCtx = document.getElementById('barChart').getContext('2d');
-        new Chart(barCtx, {
+        const barChart = new Chart(barCtx, {
             type: 'bar',
             data: {
                 labels: ['14701', '14702', '14703', 'Total'],
                 datasets: [{
-                    label: 'Utgifter (NOK)',
+                    label: 'Beløp (NOK)',
                     data: [550000, 350000, 200000, 1100000],
-                    backgroundColor: ['#ff4c4c', '#4caf50', '#4caf50', '#ff4c4c']
+                    backgroundColor: [
+                        '#ff4c4c', '#4caf50', '#4caf50', '#ff4c4c'
+                    ],
+                    borderWidth: 1,
                 }]
             },
             options: {
+                responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw.toLocaleString()} NOK`;
+                            }
+                        }
+                    }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'Ansvar', color: 'white' }},
-                    y: { 
-                        beginAtZero: true, 
-                        title: { display: true, text: 'Beløp (NOK)', color: 'white' },
-                        ticks: { color: 'white' }
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'white'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Beløp (NOK)',
+                            color: 'white'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ansvar',
+                            color: 'white'
+                        }
                     }
                 }
             }
         });
 
-        // Pie Chart
+        // Kakediagram
         const pieCtx = document.getElementById('pieChart').getContext('2d');
-        new Chart(pieCtx, {
+        const pieChart = new Chart(pieCtx, {
             type: 'pie',
             data: {
                 labels: ['14701', '14702', '14703'],
                 datasets: [{
+                    label: 'Prosentandel Av Budsjett',
                     data: [550000, 350000, 200000],
-                    backgroundColor: ['#ff4c4c', '#4caf50', '#2196f3']
+                    backgroundColor: ['#ff4c4c', '#4caf50', '#4caf50'],
                 }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'white'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = 1100000;
+                                const value = context.raw;
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${context.label}: ${percentage}%`;
+                            }
+                        }
+                    }
+                }
             }
         });
-
-        // Gauge Indicator
-        const gauge = document.getElementById('gauge');
-        function createGauge(container, value, max) {
-            const percentage = (value / max) * 100;
-            container.innerHTML = `
-                <svg viewBox="0 0 42 42" class="gauge">
-                    <circle class="gauge-bg" cx="21" cy="21" r="20"></circle>
-                    <circle class="gauge-value" cx="21" cy="21" r="20" style="stroke-dasharray: ${percentage} ${100 - percentage}; stroke: ${value > 500000 ? '#ff4c4c' : '#4caf50'};"></circle>
-                </svg>
-                <div class="gauge-text" style="color: ${value > 500000 ? '#ff4c4c' : '#4caf50'};">${value} / ${max}</div>
-            `;
-        }
-        createGauge(gauge, 1100000, 1500000);
     </script>
 </body>
 </html>
