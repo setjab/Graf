@@ -10,15 +10,17 @@
             font-family: Arial, sans-serif;
             background-color: #1e1e2f;
             color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-top: 20px;
+            color: #f8f32b;
         }
         .dashboard-container {
             width: 90%;
             max-width: 1200px;
+            margin: 20px auto;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
@@ -31,7 +33,8 @@
         }
         .card h3 {
             margin: 0 0 10px;
-            font-size: 18px;
+            font-size: 20px;
+            text-align: center;
         }
         .gauge-container {
             display: flex;
@@ -39,33 +42,28 @@
             align-items: center;
             height: 200px;
         }
-        .chart-container {
-            position: relative;
-            height: 200px;
-            width: 100%;
-        }
-        .pie-chart, .bar-chart {
+        canvas {
             width: 100%;
             height: 100%;
         }
         .info {
             text-align: center;
             margin-top: 10px;
-            font-size: 16px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <h1>Dashbord for Utgifter i Januar</h1>
+    <h1>Våre Utgifter i Januar - Ansvar 35521</h1>
     <div class="dashboard-container">
-        <!-- Card for Total Cost -->
+        <!-- Total Budget Card -->
         <div class="card">
             <h3>Totalt Budsjett og Faktiske Utgifter</h3>
-            <div class="info">Total Budsjett: 1,500,000 NOK</div>
-            <div class="info">Faktiske Utgifter: 1,100,000 NOK</div>
+            <div class="info">Total Budsjett: <strong>1,500,000 NOK</strong></div>
+            <div class="info">Faktiske Utgifter: <strong>1,100,000 NOK</strong></div>
         </div>
 
-        <!-- Gauge Card -->
+        <!-- Gauge Indicator -->
         <div class="card">
             <h3>Kostnadsindikator</h3>
             <div id="gauge" class="gauge-container"></div>
@@ -74,19 +72,19 @@
         <!-- Bar Chart -->
         <div class="card">
             <h3>Fordeling av Ansvar</h3>
-            <canvas id="barChart" class="bar-chart"></canvas>
+            <canvas id="barChart"></canvas>
         </div>
 
         <!-- Pie Chart -->
         <div class="card">
             <h3>Prosentandel Av Budsjett</h3>
-            <canvas id="pieChart" class="pie-chart"></canvas>
+            <canvas id="pieChart"></canvas>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Bar Chart Data
+        // Bar Chart
         const barCtx = document.getElementById('barChart').getContext('2d');
         new Chart(barCtx, {
             type: 'bar',
@@ -103,13 +101,17 @@
                     legend: { display: false }
                 },
                 scales: {
-                    x: { title: { display: true, text: 'Ansvar' }},
-                    y: { beginAtZero: true, title: { display: true, text: 'Beløp (NOK)' }}
+                    x: { title: { display: true, text: 'Ansvar', color: 'white' }},
+                    y: { 
+                        beginAtZero: true, 
+                        title: { display: true, text: 'Beløp (NOK)', color: 'white' },
+                        ticks: { color: 'white' }
+                    }
                 }
             }
         });
 
-        // Pie Chart Data
+        // Pie Chart
         const pieCtx = document.getElementById('pieChart').getContext('2d');
         new Chart(pieCtx, {
             type: 'pie',
@@ -122,16 +124,16 @@
             }
         });
 
-        // Gauge Chart
+        // Gauge Indicator
         const gauge = document.getElementById('gauge');
         function createGauge(container, value, max) {
             const percentage = (value / max) * 100;
             container.innerHTML = `
                 <svg viewBox="0 0 42 42" class="gauge">
                     <circle class="gauge-bg" cx="21" cy="21" r="20"></circle>
-                    <circle class="gauge-value" cx="21" cy="21" r="20" style="stroke-dasharray: ${percentage} ${100 - percentage};"></circle>
+                    <circle class="gauge-value" cx="21" cy="21" r="20" style="stroke-dasharray: ${percentage} ${100 - percentage}; stroke: ${value > 500000 ? '#ff4c4c' : '#4caf50'};"></circle>
                 </svg>
-                <div class="gauge-text">${value} / ${max}</div>
+                <div class="gauge-text" style="color: ${value > 500000 ? '#ff4c4c' : '#4caf50'};">${value} / ${max}</div>
             `;
         }
         createGauge(gauge, 1100000, 1500000);
