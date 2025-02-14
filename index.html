@@ -17,7 +17,7 @@
             height: 100vh;
         }
         h1 {
-            margin: 20px 0;
+            margin: 30px 0;
             font-size: 36px;
             color: yellow;
         }
@@ -66,41 +66,33 @@
         }
         .label {
             margin-top: 10px;
-            font-size: 18px;
+            font-size: 22px;
         }
-        #dashboard {
+        .value {
             position: absolute;
-            right: 0;
-            top: 20%;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(0deg, red, yellow, green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px white;
-            color: black;
-            font-size: 32px;
-            font-weight: bold;
+            top: -30px;
+            width: 100%;
+            font-size: 20px;
+            color: yellow;
+            text-shadow: 0 0 10px black;
         }
         .arrow {
             position: absolute;
-            width: 50px;
-            height: 100px;
-            background-color: white;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            top: -120px;
+            width: 10px;
+            height: 300px;
+            background-color: red;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) rotate(45deg);
+            transform: translateX(-50%);
+            clip-path: polygon(50% 0%, 100% 90%, 75% 90%, 75% 100%, 25% 100%, 25% 90%, 0% 90%);
             animation: bounce 2s infinite;
         }
         @keyframes bounce {
             0%, 100% {
-                transform: translateX(-50%) rotate(45deg) translateY(0);
+                transform: translateX(-50%) translateY(0);
             }
             50% {
-                transform: translateX(-50%) rotate(45deg) translateY(-10px);
+                transform: translateX(-50%) translateY(-10px);
             }
         }
     </style>
@@ -110,9 +102,6 @@
     <div id="chart-container">
         <div id="chart">
             <!-- Bars will be dynamically generated here -->
-        </div>
-        <div id="dashboard">
-            1.100.000
         </div>
         <div class="arrow"></div>
     </div>
@@ -144,11 +133,16 @@
                 barContent.className = "green";
             }
 
+            const value = document.createElement("div");
+            value.className = "value";
+            value.textContent = item.value;
+
             const label = document.createElement("div");
             label.className = "label";
-            label.textContent = `${item.name} (${item.value})`;
+            label.textContent = `${item.name}`;
 
             bar.appendChild(barContent);
+            bar.appendChild(value);
             bar.appendChild(label);
             chart.appendChild(bar);
         });
