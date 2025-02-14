@@ -3,149 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Våre Utgifter i Januar</title>
+    <title>Dashbord - Utgifter</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: black;
+            background-color: #1e1e2f;
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-        }
-        h1 {
-            margin: 30px 0;
-            font-size: 36px;
-            color: yellow;
-        }
-        #chart-container {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            position: relative;
-            width: 100%;
-            height: 70%;
+            padding: 20px;
         }
-        #chart {
+        .dashboard-container {
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .card {
+            background-color: #292942;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+        .gauge-container {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            height: 500px;
-            width: 800px;
-            position: relative;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
         }
-        .bar {
-            width: 150px;
-            margin: 0 15px;
+        .chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+        .pie-chart, .bar-chart {
+            width: 100%;
+            height: 100%;
+        }
+        .info {
             text-align: center;
-            position: relative;
-            animation: growBar 2s ease-out forwards;
-        }
-        .bar > div {
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-        }
-        .green {
-            background-color: green;
-        }
-        .glow {
-            background-color: red;
-            box-shadow: 0 0 20px red;
-        }
-        @keyframes growBar {
-            from {
-                height: 0;
-            }
-            to {
-                height: var(--height);
-            }
-        }
-        .label {
             margin-top: 10px;
-            font-size: 22px;
-        }
-        .value {
-            position: absolute;
-            top: -30px;
-            width: 100%;
-            font-size: 20px;
-            color: yellow;
-            text-shadow: 0 0 10px black;
-        }
-        .arrow {
-            position: absolute;
-            width: 10px;
-            height: 300px;
-            background-color: red;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-            clip-path: polygon(50% 0%, 100% 90%, 75% 90%, 75% 100%, 25% 100%, 25% 90%, 0% 90%);
-            animation: bounce 2s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) translateY(-10px);
-            }
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Våre Utgifter i Januar - Ansvar 35521</h1>
-    <div id="chart-container">
-        <div id="chart">
-            <!-- Bars will be dynamically generated here -->
+    <h1>Dashbord for Utgifter i Januar</h1>
+    <div class="dashboard-container">
+        <!-- Card for Total Cost -->
+        <div class="card">
+            <h3>Totalt Budsjett og Faktiske Utgifter</h3>
+            <div class="info">Total Budsjett: 1,500,000 NOK</div>
+            <div class="info">Faktiske Utgifter: 1,100,000 NOK</div>
         </div>
-        <div class="arrow"></div>
+
+        <!-- Gauge Card -->
+        <div class="card">
+            <h3>Kostnadsindikator</h3>
+            <div id="gauge" class="gauge-container"></div>
+        </div>
+
+        <!-- Bar Chart -->
+        <div class="card">
+            <h3>Fordeling av Ansvar</h3>
+            <canvas id="barChart" class="bar-chart"></canvas>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="card">
+            <h3>Prosentandel Av Budsjett</h3>
+            <canvas id="pieChart" class="pie-chart"></canvas>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Data for the graph
-        const data = [
-            { name: "14701", value: 550000 },
-            { name: "14702", value: 350000 },
-            { name: "14703", value: 200000 },
-            { name: "Total", value: 1100000 },
-        ];
-
-        const chart = document.getElementById("chart");
-        const maxBudget = 500000;
-
-        data.forEach(item => {
-            const bar = document.createElement("div");
-            bar.className = "bar";
-            bar.style.setProperty("--height", `${(item.value / 1100000) * 100}%`);
-
-            const barContent = document.createElement("div");
-            barContent.style.height = `${(item.value / 1100000) * 100}%`;
-
-            // Add glow or green based on value
-            if (item.value > maxBudget) {
-                barContent.className = "glow";
-            } else {
-                barContent.className = "green";
+        // Bar Chart Data
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['14701', '14702', '14703', 'Total'],
+                datasets: [{
+                    label: 'Utgifter (NOK)',
+                    data: [550000, 350000, 200000, 1100000],
+                    backgroundColor: ['#ff4c4c', '#4caf50', '#4caf50', '#ff4c4c']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Ansvar' }},
+                    y: { beginAtZero: true, title: { display: true, text: 'Beløp (NOK)' }}
+                }
             }
-
-            const value = document.createElement("div");
-            value.className = "value";
-            value.textContent = item.value;
-
-            const label = document.createElement("div");
-            label.className = "label";
-            label.textContent = `${item.name}`;
-
-            bar.appendChild(barContent);
-            bar.appendChild(value);
-            bar.appendChild(label);
-            chart.appendChild(bar);
         });
+
+        // Pie Chart Data
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['14701', '14702', '14703'],
+                datasets: [{
+                    data: [550000, 350000, 200000],
+                    backgroundColor: ['#ff4c4c', '#4caf50', '#2196f3']
+                }]
+            }
+        });
+
+        // Gauge Chart
+        const gauge = document.getElementById('gauge');
+        function createGauge(container, value, max) {
+            const percentage = (value / max) * 100;
+            container.innerHTML = `
+                <svg viewBox="0 0 42 42" class="gauge">
+                    <circle class="gauge-bg" cx="21" cy="21" r="20"></circle>
+                    <circle class="gauge-value" cx="21" cy="21" r="20" style="stroke-dasharray: ${percentage} ${100 - percentage};"></circle>
+                </svg>
+                <div class="gauge-text">${value} / ${max}</div>
+            `;
+        }
+        createGauge(gauge, 1100000, 1500000);
     </script>
 </body>
 </html>
